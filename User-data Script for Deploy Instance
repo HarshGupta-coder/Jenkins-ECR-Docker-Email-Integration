@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sudo apt update
+sudo apt upgrade -y
+
+#install docker
+sudo apt install docker.io -y
+sudo usermod -aG docker $USER
+
+#install awscli
+sudo apt install awscli -y
+
+#install java
+sudo apt install openjdk-11-jre -y
