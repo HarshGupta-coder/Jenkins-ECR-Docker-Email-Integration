@@ -72,11 +72,11 @@ Create two security groups (SG):
 
 ### Step 2: Launch Main Instance
 
-Launch the main EC2 instance with a UserData script provided in the documentation. Attach `main-sg` to the main EC2 instance.
+Launch the main EC2 instance with a UserData script provided in the repo. Attach `main-sg` to the main EC2 instance.
 
 ### Step 3: Launch Deploy Instance
 
-Launch the deploy EC2 instance with a UserData script provided in the documentation. Attach `deploy-sg` to the deploy EC2 instance.
+Launch the deploy EC2 instance with a UserData script provided in the repo. Attach `deploy-sg` to the deploy EC2 instance.
 
 ### Step 4: Create IAM User
 
@@ -108,7 +108,7 @@ In Jenkins, configure email notifications in "Manage Jenkins" > "Configure Syste
 
 ### Step 11: Jenkins Pipeline
 
-Create a Jenkins pipeline script according to the documentation and adjust your settings.
+Create a Jenkins pipeline script according to the repo and adjust your settings.
 
 ### Step 12: Security Group Updates
 
@@ -141,7 +141,7 @@ This section provides guidance on how to use the DevOps pipeline and deploy your
 
 ### 2. Jenkins Pipeline
 
-- The Jenkins pipeline script defined in the project's documentation automates the following stages:
+- The Jenkins pipeline script defined in the project's repo automates the following stages:
   - Code checkout from your GitHub repository.
   - Building a Docker image with a unique tag.
   - Pushing the Docker image to Amazon Elastic Container Registry (ECR).
@@ -186,7 +186,7 @@ This section provides guidance on how to use the DevOps pipeline and deploy your
 
 ### 2. Jenkins Pipeline
 
-- The Jenkins pipeline script defined in the project's documentation automates the following stages:
+- The Jenkins pipeline script defined in the project's repo automates the following stages:
   - Code checkout from your GitHub repository.
   - Building a Docker image with a unique tag.
   - Pushing the Docker image to Amazon Elastic Container Registry (ECR).
