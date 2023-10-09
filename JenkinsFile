@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+        AWS_REGION            = 'us-east-1'
+        ECR_REPO_URL          = '697800411680.dkr.ecr.us-east-1.amazonaws.com/task-1'
+    }
+    stages {
+        stage('Code') {
+            steps {
+                // Checkout the code from the GitHub repository
+                git url: 'https://github.com/HarshGupta-coder/AWS-Jenkins-ECR-Docker.git', branch: 'main'
+            }
+        }
+        stage('Build and test') {
+            steps {
+                echo 'Build and Test'
+                // Build a Docker image with a tag based on the build number
+                sh 'docker build -t myapp:${BUILD_NUMBER} .'
+            }
+        }
+        stage('Push to ECR') {
+            steps {
+                script {
+                    // Authenticate Docker with ECR and push the Docker image
+                    def ecrLoginCmd = "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URL"
+                    sh ecrLoginCmd
+                    // Lines to tag and push the image with a specific version
+                    sh "docker tag myapp:${BUILD_NUMBER} $ECR_REPO_URL:${BUILD_NUMBER}"
+                    sh "docker push $ECR_REPO_URL:${BUILD_NUMBER}"
+                }
+            }
+        }
+        stage('Deploy to EC2') {
+            steps {
+                sshagent(['ssh-credentials']) {
+                    // SSH into the EC2 instance, authenticate Docker with ECR, and run the Docker container
+                    sh 'ssh -o StrictHostKeyChecking=no root@3.81.15.229 "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URL"'
+                    sh 'ssh -o StrictHostKeyChecking=no root@3.81.15.229 "docker pull $ECR_REPO_URL:${BUILD_NUMBER}"'
+                    sh 'ssh -o StrictHostKeyChecking=no root@3.81.15.229 "docker run -p 5000:5000 -d $ECR_REPO_URL:${BUILD_NUMBER}"'
+                }
+            }
+        }
+        stage('Send Email Notification') {
+            steps {
+                mail bcc: '', body: 'The build was successful. You can access it at https://task-1.jkharsh.xyz/', cc: '', from: '', replyTo: '', subject: 'Jenkins Job', to: 'Jenkins-Update-Trial@mailinator.com'
+                
+            }
+        }
+    }
+}
